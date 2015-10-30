@@ -38,7 +38,7 @@ namespace odiard_pasini_peage
         public const int MAX_SPEED_ROAD_1 = 200;        // in pixels per second
         public const int MAX_SPEED_ROAD_2 = 180;        // in pixels per second
         public const int MAX_SPEED_ROAD_3 = 160;        // in pixels per second
-        public const int SPAWN_RATE = 3;                // X = 1/X% chance per step
+        public const int SPAWN_RATE = 30;                // X = 1/X% chance per step
         public const int T_RATE = 30;                   // X = X% of cars being orange (Télépéage)
         public const int STEP = 20;                     // in milliseconds
         public const int MIN_TAT_DURATION = 30;         // Time At Counter in number of steps
