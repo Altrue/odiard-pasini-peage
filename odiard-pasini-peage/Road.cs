@@ -15,8 +15,8 @@ namespace odiard_pasini_peage
         public const int ZONE_GUICHET_LENGTH = 46;      // in horizontal pixels from left border
         public const int ZONE_PEAGE_END = 1197;         // in horizontal pixels from left border
         public static int MAX_SPEED_ROAD_1 = 160;       
-        public static int MAX_SPEED_ROAD_2 = 180;
-        public static int MAX_SPEED_ROAD_3 = 200;
+        public static int MAX_SPEED_ROAD_2 = 170;
+        public static int MAX_SPEED_ROAD_3 = 180;
         public static int MAX_SPEED_ROAD_PEAGE = 0;     // a définir
 
         private int maxSpeedRoad;        // in pixels per second (160, 180 ou 200) / vitesse max de cette route

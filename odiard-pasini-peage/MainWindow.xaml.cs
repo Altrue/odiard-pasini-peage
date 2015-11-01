@@ -131,7 +131,7 @@ namespace odiard_pasini_peage
                 Rectangle body = new Rectangle();
                 body.Height = CarAgent.CAR_HEIGHT;
                 body.Width = CarAgent.CAR_WIDTH;
-                body.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/ressources/car_" + paramCar.Color + ".png")));
+                body.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/ressources/car_" + paramCar.Color + (paramCar.isBraking+1) + ".png")));
                 Canvas.SetTop(body, (paramCar.PosY - CarAgent.HALF_CAR_HEIGHT));
                 Canvas.SetLeft(body, (paramCar.PosX - CarAgent.HALF_CAR_WIDTH));
                 worldCanvas.Children.Add(body);

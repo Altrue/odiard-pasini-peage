@@ -27,10 +27,10 @@ namespace odiard_pasini_peage
         //param
         public static double MIN_DISTANCE = 70;                 // in pixels
         public static double MIN_DISTANCE_SQUARED = 500;        // in pixels
-        public static int ACCELERATION = 50;                    // in number of steps required to reach 0 -> max speed
+        public static int ACCELERATION = 40;                    // in number of steps required to reach 0 -> max speed
         public static int HALF_ACCELERATION = ACCELERATION / 2; // opti
         public static int BRAKES_EFFICIENCY = 2;                // car brakes are X times more efficient than car acceleration
-        public static int SPAWN_RATE = 30;                      // X = 1/X% chance per step
+        public static int SPAWN_RATE = 25;                      // X = 1/X% chance per step
         public static int T_RATE = 30;                          // X = X% of cars being orange (Télépéage)
         public static int STEP = 20;                            // in milliseconds
         public static int STEPS_PER_SECOND = 1000 / STEP;       // 50 steps/sec for 20ms steps, opti
@@ -46,10 +46,13 @@ namespace odiard_pasini_peage
         private int timeAtCounter;
         private int id;
         private double speedX;
+        private double oldSpeedX;
         private double speedY;
         private bool flagAbort;
         private int speedMult;                                  // Random variation of + / - 3% of the max speed.
         private double targetY;                                 // Target Y position
+        public int isBraking;
+        private int wasBraking;
 
         //getter setter propre et optimisé
         //en interne road pour appeler directement la propriété
@@ -118,6 +121,8 @@ namespace odiard_pasini_peage
             id = paramID;
             flagAbort = false;
             theWorld = world;
+            isBraking = 0;
+            wasBraking = 0;
 
             // Roll of the speed mult.
             int rollSpeedMult = MainWindow.rnd.Next(0, 7);
@@ -328,7 +333,7 @@ namespace odiard_pasini_peage
             {
                 if (car != null && car.Id != id)
                 {
-                    if (car.PosX > PosX && car.PosX < (PosX + speedX) && car.PosY > (PosY - 40) && car.PosY < (PosY + 50) && car.Road == road)
+                    if (car.PosX > (PosX) && car.PosX < (PosX + speedX + 10) && car.PosY > (PosY - 40) && car.PosY < (PosY + 40))
                     {
                         double distance = DistanceTo(car);
                         if (distance < proximity)
@@ -427,7 +432,7 @@ namespace odiard_pasini_peage
                 
                 double differenceAbs = Math.Abs(targetY - PosY);
 
-                if (differenceAbs > 10)
+                if (differenceAbs > 20)
                 {
                     // Lots of Y distance yet
                     speedY += (speedX * direction) / HALF_ACCELERATION;
@@ -435,19 +440,19 @@ namespace odiard_pasini_peage
                 else
                 {
                     // Not a lot of Y distance
-                    if (speedY > 1) {
+                    if (speedY > 2) {
                         speedY -= (speedX * direction) / ACCELERATION;
                     }
                     else
                     {
-                        speedY = 1;
+                        speedY = 2;
                     }
                         
                 }
 
-                if (speedY > (speedX * 0.5 * direction))
+                if (speedY > (speedX * 0.4 * direction))
                 {
-                    speedY = (speedX * 0.5 * direction);
+                    speedY = (speedX * 0.4 * direction);
                 }
             }
             else
@@ -462,8 +467,23 @@ namespace odiard_pasini_peage
             // Apply Speed Multiplier
             speedX = speedX * SpeedMult;
             speedY = speedY * SpeedMult;
+
+            // 1 = braking, 0 = not braking
+            
+            isBraking = (oldSpeedX > speedX ? 1 : 0);
+            if (wasBraking == 1 && isBraking == 0)
+            {
+                isBraking = 1;
+                wasBraking = 0;
+            }
+            else
+            {
+                wasBraking = isBraking;
+            }
+
             PosX += speedX / STEPS_PER_SECOND;
             PosY += speedY / STEPS_PER_SECOND;
+            oldSpeedX = speedX;
         }
 
         public void rollTimeAtCounter()
