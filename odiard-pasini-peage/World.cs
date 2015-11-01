@@ -17,9 +17,9 @@ namespace odiard_pasini_peage
 
         public World()
         {
-            roadsArray[0] = new Road(160, 308);
-            roadsArray[1] = new Road(180, 358);
-            roadsArray[2] = new Road(200, 408);
+            roadsArray[0] = new Road(160, 308, 1);
+            roadsArray[1] = new Road(180, 358, 2);
+            roadsArray[2] = new Road(200, 408, 3);
         }
 
         public void UpdateEnvironnement()
