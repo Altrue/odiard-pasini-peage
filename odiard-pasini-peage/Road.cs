@@ -17,7 +17,7 @@ namespace odiard_pasini_peage
         public static int MAX_SPEED_ROAD_1 = 160;       
         public static int MAX_SPEED_ROAD_2 = 170;
         public static int MAX_SPEED_ROAD_3 = 180;
-        public static int MAX_SPEED_ROAD_PEAGE = 0;     // a définir
+        public static int MAX_SPEED_ROAD_PEAGE = 0;     // a définir || A priori, pas besoin.
 
         private int maxSpeedRoad;        // in pixels per second (160, 180 ou 200) / vitesse max de cette route
         private double posY;                // pos de la route
@@ -28,6 +28,12 @@ namespace odiard_pasini_peage
             maxSpeedRoad = maxSpeed;
             posY = y;
             id = x;
+        }
+
+        public int MaxSpeedRoad
+        {
+            get { return maxSpeedRoad; }
+            set { maxSpeedRoad = value; }
         }
 
         public double PosY

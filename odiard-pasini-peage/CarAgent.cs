@@ -251,7 +251,7 @@ namespace odiard_pasini_peage
             pickTargetCounter();
             rollTimeAtCounter();
 
-            speedX = 150; // TEMPORAIRE
+            speedX = Road.MaxSpeedRoad;
             speedY = 0;
             updateSpeed(listCars);
 
@@ -339,11 +339,8 @@ namespace odiard_pasini_peage
 
         public void updateSpeed(CarAgent[] listCars)
         {
-            // TODO - Chercher la voiture la plus proche vers l'avant en cône. Maj vitesse. Fonctionner en mode aveugle : 0 anticipation.
-            // Zone de recherche proportionelle à la vitesse (pré-update)
-
             // Obstacle detection :
-            double proximity = speedX; // A VERIFIER
+            double proximity = speedX;
             flagVerticalProx = false;
             flagHorizontalProx = false;
             // CarAgent closestCar;
@@ -423,7 +420,7 @@ namespace odiard_pasini_peage
             else
             {
                 // Acceleration without obstacle :
-                switch (road.Id) // ID%3+1 for random vehicle speed. or road for non-random road speed.
+                switch (road.Id)
                 {
                     case 3:
                         speedX += Road.MAX_SPEED_ROAD_1 / ACCELERATION;
@@ -449,8 +446,6 @@ namespace odiard_pasini_peage
                 }
             }
 
-            // SpeedY will be a fraction of SpeedX. So that it covers any scenario very easily.
-            // NOTE : IT DOESN'T WORK!
             if (targetY != PosY && flagVerticalProx == false)
             {
                 // UP or DOWN?
@@ -537,7 +532,6 @@ namespace odiard_pasini_peage
 
         internal void Update(CarAgent[] listCars)
         {
-            //double squareDistanceMin = paramCarList.Where(x => !x.Equals(this)).Min(x => x.SqrDistanceTo(this));
             updateTargetY();
             updateSpeed(listCars);
             updateAngle();
