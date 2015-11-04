@@ -30,7 +30,7 @@ namespace odiard_pasini_peage
         public static int ACCELERATION = 40;                    // in number of steps required to reach 0 -> max speed
         public static int HALF_ACCELERATION = ACCELERATION / 2; // opti
         public static int BRAKES_EFFICIENCY = 2;                // car brakes are X times more efficient than car acceleration
-        public static int SPAWN_RATE = 30;                      // X = 1/X% chance per step
+        public static int SPAWN_RATE = 15;                      // X = 1/X% chance per step
         public static int T_RATE = 30;                          // X = X% of cars being orange (Télépéage)
         public static int STEP = 20;                            // in milliseconds
         public static int STEPS_PER_SECOND = 1000 / STEP;       // 50 steps/sec for 20ms steps, opti
@@ -53,6 +53,9 @@ namespace odiard_pasini_peage
         private double targetY;                                 // Target Y position
         public int isBraking;
         private int wasBraking;
+        private bool flagVerticalProx;
+        private bool flagHorizontalProx;
+        public double angle;
 
         //getter setter propre et optimisé
         //en interne road pour appeler directement la propriété
@@ -112,6 +115,16 @@ namespace odiard_pasini_peage
             get { return targetY; }
             set { targetY = value; }
         }
+        public bool FlagVerticalProx
+        {
+            get { return flagVerticalProx; }
+            set { flagVerticalProx = value; }
+        }
+        public bool FlagHorizontalProx
+        {
+            get { return flagHorizontalProx; }
+            set { flagHorizontalProx = value; }
+        }
 
         // Constructor
         public CarAgent(int paramID, CarAgent[] listCars, World world)
@@ -165,22 +178,23 @@ namespace odiard_pasini_peage
             PosX = -19;
 
             int nbRoad = 0;
-            // Télépéage can't spawn on road 3.
+            // Télépéage can't spawn on road 3. Non-télépéage can't spawn on road 1.
             if (PaymentType == 0)
             {
                 nbRoad = MainWindow.rnd.Next(0, 2);
             }
             else
             {
-                nbRoad = MainWindow.rnd.Next(0, 3);
+                nbRoad = MainWindow.rnd.Next(1, 3);
             }
             road = world.roadsArray[nbRoad];
             PosY = road.PosY;
             targetY = PosY;
+
             // First Range Calculation for spawn-eligibility on the selected road.
             bool spawnable = false;
             bool pass;
-            int attempts = 0;
+            int attempts = 1;
 
             if (MainWindow.carCount > 0)
             {
@@ -209,20 +223,13 @@ namespace odiard_pasini_peage
 
                     else
                     {
-                        if(nbRoad == 2 && PaymentType == 1)
+                        if(nbRoad == 2 && PaymentType == 1) // Non-Télépéage is restricted to road 2 and 3.
                         {
-                            nbRoad = 0;
+                            nbRoad = 1;
                         }
                         else if (nbRoad == 1 && PaymentType == 0) // Télépéage is restricted to road 1 and 2.
                         {
-                            if (attempts == 0)
-                            {
-                                nbRoad--; // Attempting road 1 since we didn't try it.
-                            }
-                            else
-                            {
-                                attempts++; // If we already tried both road 1 and 2, abort.
-                            }
+                            nbRoad--; // Attempting road 1 since we didn't try it.
                         }
                         else
                         {
@@ -256,13 +263,18 @@ namespace odiard_pasini_peage
         {
             int target = 0;
 
+            // A target counter is choosen in accordance with the payment type and current road.
             if (paymentType == 0)
             {
                target = MainWindow.rnd.Next(1,3);
             }
+            else if (road.Id == 3)
+            {
+                target = MainWindow.rnd.Next(5,7);
+            }
             else
             {
-                target = MainWindow.rnd.Next(3,7);
+                target = MainWindow.rnd.Next(3,5);
             }
 
             targetCounter = target;
@@ -314,6 +326,10 @@ namespace odiard_pasini_peage
                     break;
                 case (4): // Leaving counter zone
                     targetY = road.PosY;
+                    if (speedX > (Road.MAX_SPEED_ROAD_3 * 0.75) && TargetCounter == 1)
+                    {
+                        speedX = Road.MAX_SPEED_ROAD_3 * 0.75;
+                    }
                     break;
                 case (5): // Leaving "Peage" zone
                     // No Switch to do
@@ -328,6 +344,8 @@ namespace odiard_pasini_peage
 
             // Obstacle detection :
             double proximity = speedX; // A VERIFIER
+            flagVerticalProx = false;
+            flagHorizontalProx = false;
             // CarAgent closestCar;
             foreach (CarAgent car in listCars)
             {
@@ -340,6 +358,14 @@ namespace odiard_pasini_peage
                         {
                             proximity = distance;
                             // closestCar = car;
+                        }
+                        if (Math.Abs(car.PosX - PosX) > CAR_WIDTH + 10)
+                        {
+                            flagHorizontalProx = true;
+                        }
+                        else if (Math.Abs(car.PosY - PosY) > CAR_HEIGHT + 10)
+                        {
+                            flagVerticalProx = true;
                         }
                     }
                 }
@@ -424,40 +450,48 @@ namespace odiard_pasini_peage
             }
 
             // SpeedY will be a fraction of SpeedX. So that it covers any scenario very easily.
-            if (targetY != PosY)
+            // NOTE : IT DOESN'T WORK!
+            if (targetY != PosY && flagVerticalProx == false)
             {
                 // UP or DOWN?
                 int direction = (targetY > PosY ? 1 : -1);
 
-                
                 double differenceAbs = Math.Abs(targetY - PosY);
 
-                if (differenceAbs > 20)
+                if (differenceAbs > 30)
                 {
                     // Lots of Y distance yet
-                    speedY += (speedX * direction) / HALF_ACCELERATION;
+                    speedY += (speedX * direction) / ACCELERATION;
                 }
                 else
                 {
                     // Not a lot of Y distance
-                    if (speedY > 2) {
-                        speedY -= (speedX * direction) / ACCELERATION;
-                    }
-                    else
+                    double targetYSpeed = (targetY - PosY) * 1.5;
+                    bool flagDeceleration = false;
+                    if (Math.Abs(speedY) > Math.Abs(targetYSpeed))
                     {
-                        speedY = 2;
+                        speedY += ((-Road.MAX_SPEED_ROAD_3 * direction) / ACCELERATION);
+                        flagDeceleration = true;
                     }
-                        
+
+                    if (Math.Abs(speedY) < Math.Abs(targetYSpeed) && flagDeceleration == true)
+                    {
+                        speedY = targetYSpeed;
+                    }
+                    else if (Math.Abs(speedY) < Math.Abs(targetYSpeed) && flagDeceleration == false)
+                    {
+                        speedY += ((Road.MAX_SPEED_ROAD_3 * direction) / ACCELERATION);
+                    }
                 }
 
-                if (speedY > (speedX * 0.4 * direction))
+                if (Math.Abs(speedY) > (speedX * 0.5))
                 {
-                    speedY = (speedX * 0.4 * direction);
+                    speedY = (speedX * 0.5 * direction);
                 }
             }
             else
             {
-                speedY = 0;
+                speedY = speedY/2;
             }
 
         }
@@ -486,6 +520,16 @@ namespace odiard_pasini_peage
             oldSpeedX = speedX;
         }
 
+        public void updateAngle()
+        {
+            if (speedX == 0)
+            {
+                speedX = 0.001;
+            }
+
+            angle = (Math.Atan(speedY/speedX) * 180) / Math.PI;
+        }
+
         public void rollTimeAtCounter()
         {
             MainWindow.rnd.Next(MIN_TAT_DURATION, (MAX_TAT_DURATION + 1));
@@ -496,6 +540,7 @@ namespace odiard_pasini_peage
             //double squareDistanceMin = paramCarList.Where(x => !x.Equals(this)).Min(x => x.SqrDistanceTo(this));
             updateTargetY();
             updateSpeed(listCars);
+            updateAngle();
             updatePosition();
         }
 

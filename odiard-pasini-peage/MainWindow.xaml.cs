@@ -129,9 +129,14 @@ namespace odiard_pasini_peage
             else
             {
                 Rectangle body = new Rectangle();
+                double angle = 45; // TEMP
                 body.Height = CarAgent.CAR_HEIGHT;
                 body.Width = CarAgent.CAR_WIDTH;
                 body.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/ressources/car_" + paramCar.Color + (paramCar.isBraking+1) + ".png")));
+                body.RenderTransformOrigin = new Point(0.5,0.5);
+                RotateTransform myRotateTransform = new RotateTransform(0);
+                body.RenderTransform = myRotateTransform;
+                myRotateTransform.Angle = paramCar.angle;
                 Canvas.SetTop(body, (paramCar.PosY - CarAgent.HALF_CAR_HEIGHT));
                 Canvas.SetLeft(body, (paramCar.PosX - CarAgent.HALF_CAR_WIDTH));
                 worldCanvas.Children.Add(body);
