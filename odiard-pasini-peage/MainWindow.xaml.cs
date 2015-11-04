@@ -114,6 +114,17 @@ namespace odiard_pasini_peage
                     }
                 }
             }
+
+            // UI Update
+            
+            // Car Count
+                TextBlock tbCarCount = new TextBlock();
+                tbCarCount.Text = "Nombre de voitures : " + carCount;
+                tbCarCount.Foreground = new SolidColorBrush(Colors.White);
+                Canvas.SetTop(tbCarCount, (10));
+                Canvas.SetLeft(tbCarCount, (10));
+                worldCanvas.Children.Add(tbCarCount);
+
             worldCanvas.UpdateLayout();
 
         }
