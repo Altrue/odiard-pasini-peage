@@ -13,7 +13,7 @@ namespace odiard_pasini_peage
     {
         public event WorldUpdated WorldUpdatedEvent;
 
-        public CarAgent[] carList = new CarAgent[200]; //mieux vaut déclarer la dimension du tableau directement
+        public CarAgent[] carList = new CarAgent[100]; //mieux vaut déclarer la dimension du tableau directement
         public Road[] roadsArray = new Road[3];
 
         public World()

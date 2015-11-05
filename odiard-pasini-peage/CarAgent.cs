@@ -26,11 +26,10 @@ namespace odiard_pasini_peage
 
         //param
         public static double MIN_DISTANCE = 70;                 // in pixels
-        public static double MIN_DISTANCE_SQUARED = 500;        // in pixels
         public static int ACCELERATION = 40;                    // in number of steps required to reach 0 -> max speed
         public static int HALF_ACCELERATION = ACCELERATION / 2; // opti
         public static int BRAKES_EFFICIENCY = 2;                // car brakes are X times more efficient than car acceleration
-        public static int SPAWN_RATE = 15;                      // X = 1/X% chance per step
+        public static int SPAWN_RATE = 1;                      // X = 1/X% chance per step
         public static int T_RATE = 30;                          // X = X% of cars being orange (Télépéage)
         public static int STEP = 20;                            // in milliseconds
         public static int STEPS_PER_SECOND = 1000 / STEP;       // 50 steps/sec for 20ms steps, opti
@@ -56,6 +55,7 @@ namespace odiard_pasini_peage
         private bool flagVerticalProx;
         private bool flagHorizontalProx;
         public double angle;
+        private double proximity;
 
         //getter setter propre et optimisé
         //en interne road pour appeler directement la propriété
@@ -124,6 +124,11 @@ namespace odiard_pasini_peage
         {
             get { return flagHorizontalProx; }
             set { flagHorizontalProx = value; }
+        }
+        public double Proximity
+        {
+            get { return proximity; }
+            set { proximity = value; }
         }
 
         // Constructor
@@ -340,7 +345,7 @@ namespace odiard_pasini_peage
         public void updateSpeed(CarAgent[] listCars)
         {
             // Obstacle detection :
-            double proximity = speedX;
+            proximity = speedX;
             flagVerticalProx = false;
             flagHorizontalProx = false;
             // CarAgent closestCar;
@@ -450,6 +455,7 @@ namespace odiard_pasini_peage
             {
                 // UP or DOWN?
                 int direction = (targetY > PosY ? 1 : -1);
+                int directionMov = (speedY >= 0 ? 1 : -1);
 
                 double differenceAbs = Math.Abs(targetY - PosY);
 
@@ -465,7 +471,7 @@ namespace odiard_pasini_peage
                     bool flagDeceleration = false;
                     if (Math.Abs(speedY) > Math.Abs(targetYSpeed))
                     {
-                        speedY += ((-Road.MAX_SPEED_ROAD_3 * direction) / ACCELERATION);
+                        speedY += ((-Road.MAX_SPEED_ROAD_3 * directionMov) / ACCELERATION);
                         flagDeceleration = true;
                     }
 

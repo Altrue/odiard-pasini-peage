@@ -20,7 +20,7 @@ namespace odiard_pasini_peage
     {
         // ===============================
         // DEBUG MODE CONTROL
-        public const bool DEBUGMODE = true;
+        public const bool DEBUGMODE = false;
         // ===============================
 
         // TODO :
@@ -148,6 +148,25 @@ namespace odiard_pasini_peage
                 RotateTransform myRotateTransform = new RotateTransform(0);
                 body.RenderTransform = myRotateTransform;
                 myRotateTransform.Angle = paramCar.angle;
+
+                if (DEBUGMODE)
+                {
+                    TextBlock tbCarID = new TextBlock();
+                    tbCarID.Text = paramCar.Id + " | Vit " + Math.Truncate(paramCar.SpeedX) + " | Prox " + Math.Truncate(paramCar.Proximity);
+                    if (paramCar.isBraking == 1)
+                    {
+                        tbCarID.Foreground = new SolidColorBrush(Colors.LightSalmon);
+                    }
+                    else
+                    {
+                        tbCarID.Foreground = new SolidColorBrush(Colors.LightBlue);
+                    }
+                    Canvas.SetTop(tbCarID, (paramCar.PosY + 8));
+                    Canvas.SetLeft(tbCarID, (paramCar.PosX - 50));
+                    Canvas.SetZIndex(tbCarID, 1);
+                    worldCanvas.Children.Add(tbCarID);
+                }
+
                 Canvas.SetTop(body, (paramCar.PosY - CarAgent.HALF_CAR_HEIGHT));
                 Canvas.SetLeft(body, (paramCar.PosX - CarAgent.HALF_CAR_WIDTH));
                 worldCanvas.Children.Add(body);

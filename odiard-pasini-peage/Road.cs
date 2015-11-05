@@ -9,8 +9,8 @@ namespace odiard_pasini_peage
     public class Road
     {
         //const
-        public const int ZONE_TRANSITION_START = 304;   // in horizontal pixels from left border
-        public const int ZONE_PEAGE_START = 671;        // in horizontal pixels from left border
+        public const int ZONE_TRANSITION_START = 204;   // in horizontal pixels from left border
+        public const int ZONE_PEAGE_START = 571;        // in horizontal pixels from left border
         public const int ZONE_GUICHET_START = 999;     // in horizontal pixels from left border
         public const int ZONE_GUICHET_LENGTH = 46;      // in horizontal pixels from left border
         public const int ZONE_PEAGE_END = 1197;         // in horizontal pixels from left border
