@@ -14,7 +14,7 @@ namespace odiard_pasini_peage
 
         public CarAgent[] carList = new CarAgent[200]; //mieux vaut déclarer la dimension du tableau directement
         public Road[] roadsArray = new Road[3];
-        public Peage[] peagesArray = new Peage[3];
+        public Peage[] peagesArray = new Peage[6];
 
         public World()
         {
@@ -24,6 +24,9 @@ namespace odiard_pasini_peage
             peagesArray[0] = new Peage(1000, 308);
             peagesArray[1] = new Peage(1000, 358);
             peagesArray[2] = new Peage(1000, 408);
+            peagesArray[3] = new Peage(1000, 408);
+            peagesArray[4] = new Peage(1000, 408);
+            peagesArray[5] = new Peage(1000, 408);
         }
 
         public void UpdateEnvironnement()
