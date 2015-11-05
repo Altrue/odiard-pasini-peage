@@ -20,7 +20,7 @@ namespace odiard_pasini_peage
     {
         // ===============================
         // DEBUG MODE CONTROL
-        public const bool DEBUGMODE = true;
+        public const bool DEBUGMODE = false;
         // ===============================
 
         // TODO :
@@ -114,6 +114,17 @@ namespace odiard_pasini_peage
                     }
                 }
             }
+
+            // UI Update
+            
+            // Car Count
+                TextBlock tbCarCount = new TextBlock();
+                tbCarCount.Text = "Nombre de voitures : " + carCount;
+                tbCarCount.Foreground = new SolidColorBrush(Colors.White);
+                Canvas.SetTop(tbCarCount, (10));
+                Canvas.SetLeft(tbCarCount, (10));
+                worldCanvas.Children.Add(tbCarCount);
+
             worldCanvas.UpdateLayout();
 
         }
@@ -129,9 +140,33 @@ namespace odiard_pasini_peage
             else
             {
                 Rectangle body = new Rectangle();
+                double angle = 45; // TEMP
                 body.Height = CarAgent.CAR_HEIGHT;
                 body.Width = CarAgent.CAR_WIDTH;
-                body.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/ressources/car_" + paramCar.Color + ".png")));
+                body.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/ressources/car_" + paramCar.Color + (paramCar.isBraking+1) + ".png")));
+                body.RenderTransformOrigin = new Point(0.5,0.5);
+                RotateTransform myRotateTransform = new RotateTransform(0);
+                body.RenderTransform = myRotateTransform;
+                myRotateTransform.Angle = paramCar.angle;
+
+                if (DEBUGMODE)
+                {
+                    TextBlock tbCarID = new TextBlock();
+                    tbCarID.Text = paramCar.Id + " | Vit " + Math.Truncate(paramCar.SpeedX) + " | Prox " + Math.Truncate(paramCar.Proximity);
+                    if (paramCar.isBraking == 1)
+                    {
+                        tbCarID.Foreground = new SolidColorBrush(Colors.LightSalmon);
+                    }
+                    else
+                    {
+                        tbCarID.Foreground = new SolidColorBrush(Colors.LightBlue);
+                    }
+                    Canvas.SetTop(tbCarID, (paramCar.PosY + 8));
+                    Canvas.SetLeft(tbCarID, (paramCar.PosX - 50));
+                    Canvas.SetZIndex(tbCarID, 1);
+                    worldCanvas.Children.Add(tbCarID);
+                }
+
                 Canvas.SetTop(body, (paramCar.PosY - CarAgent.HALF_CAR_HEIGHT));
                 Canvas.SetLeft(body, (paramCar.PosX - CarAgent.HALF_CAR_WIDTH));
                 worldCanvas.Children.Add(body);

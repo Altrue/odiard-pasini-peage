@@ -102,12 +102,16 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ressources\ia_multiagents_bg.png" />
-    <Resource Include="ressources\car_orange.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ressources\car_black.png" />
-    <Resource Include="ressources\car_grey.png" />
-    <Resource Include="ressources\car_white.png" />
+    <Resource Include="ressources\car_black1.png" />
+    <Resource Include="ressources\car_black2.png" />
+    <Resource Include="ressources\car_grey1.png" />
+    <Resource Include="ressources\car_grey2.png" />
+    <Resource Include="ressources\car_orange1.png" />
+    <Resource Include="ressources\car_orange2.png" />
+    <Resource Include="ressources\car_white1.png" />
+    <Resource Include="ressources\car_white2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
