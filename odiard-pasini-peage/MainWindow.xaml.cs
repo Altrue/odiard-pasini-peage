@@ -121,9 +121,72 @@ namespace odiard_pasini_peage
                 TextBlock tbCarCount = new TextBlock();
                 tbCarCount.Text = "Nombre de voitures : " + carCount;
                 tbCarCount.Foreground = new SolidColorBrush(Colors.White);
-                Canvas.SetTop(tbCarCount, (10));
-                Canvas.SetLeft(tbCarCount, (10));
+                Canvas.SetTop(tbCarCount, (5));
+                Canvas.SetLeft(tbCarCount, (5));
                 worldCanvas.Children.Add(tbCarCount);
+
+            // Min Distance
+                TextBlock tbMin = new TextBlock();
+                tbMin.Text = "Distance Minimale : " + CarAgent.MIN_DISTANCE;
+                tbMin.Foreground = new SolidColorBrush(Colors.White);
+                Canvas.SetTop(tbMin, (5));
+                Canvas.SetLeft(tbMin, (200));
+                worldCanvas.Children.Add(tbMin);
+
+            // Acceleration
+                TextBlock tbAcceleration = new TextBlock();
+                tbAcceleration.Text = "Accélération : " + CarAgent.ACCELERATION;
+                tbAcceleration.Foreground = new SolidColorBrush(Colors.White);
+                Canvas.SetTop(tbAcceleration, (17));
+                Canvas.SetLeft(tbAcceleration, (200));
+                worldCanvas.Children.Add(tbAcceleration);
+            // Brakes Efficiency
+                TextBlock tbBrakesEfficiency = new TextBlock();
+                tbBrakesEfficiency.Text = "Efficacité des freins : " + CarAgent.BRAKES_EFFICIENCY;
+                tbBrakesEfficiency.Foreground = new SolidColorBrush(Colors.White);
+                Canvas.SetTop(tbBrakesEfficiency, (30));
+                Canvas.SetLeft(tbBrakesEfficiency, (200));
+                worldCanvas.Children.Add(tbBrakesEfficiency);
+
+            // Spawn Rate
+                TextBlock tbSpawnRate = new TextBlock();
+                tbSpawnRate.Text = "Taux d'apparition : " + CarAgent.SPAWN_RATE;
+                tbSpawnRate.Foreground = new SolidColorBrush(Colors.White);
+                Canvas.SetTop(tbSpawnRate, (42));
+                Canvas.SetLeft(tbSpawnRate, (200));
+                worldCanvas.Children.Add(tbSpawnRate);
+
+            // Télépéage Rate
+                TextBlock tbTRate = new TextBlock();
+                tbTRate.Text = "Nombre de voitures : " + CarAgent.T_RATE;
+                tbTRate.Foreground = new SolidColorBrush(Colors.White);
+                Canvas.SetTop(tbTRate, (54));
+                Canvas.SetLeft(tbTRate, (200));
+                worldCanvas.Children.Add(tbTRate);
+
+            // Step
+                TextBlock tbStep = new TextBlock();
+                tbStep.Text = "Durée des Steps : " + CarAgent.STEP;
+                tbStep.Foreground = new SolidColorBrush(Colors.White);
+                Canvas.SetTop(tbStep, (66));
+                Canvas.SetLeft(tbStep, (200));
+                worldCanvas.Children.Add(tbStep);
+
+            // Minimum Time At Counter
+                TextBlock tbMinTAT = new TextBlock();
+                tbMinTAT.Text = "Temps minimum au guichet : " + CarAgent.MIN_TAT_DURATION;
+                tbMinTAT.Foreground = new SolidColorBrush(Colors.White);
+                Canvas.SetTop(tbMinTAT, (78));
+                Canvas.SetLeft(tbMinTAT, (200));
+                worldCanvas.Children.Add(tbMinTAT);
+
+            // Maximum Time At Counter
+                TextBlock tbMaxTAT = new TextBlock();
+                tbMaxTAT.Text = "Temps maximum au guichet : " + CarAgent.MAX_TAT_DURATION;
+                tbMaxTAT.Foreground = new SolidColorBrush(Colors.White);
+                Canvas.SetTop(tbMaxTAT, (90));
+                Canvas.SetLeft(tbMaxTAT, (200));
+                worldCanvas.Children.Add(tbMaxTAT);
 
             worldCanvas.UpdateLayout();
 
