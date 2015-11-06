@@ -236,5 +236,10 @@ namespace odiard_pasini_peage
             }
         }
 
+        private void DrawPeage(Peage peage)
+        {
+
+        }
+
     }
 }
