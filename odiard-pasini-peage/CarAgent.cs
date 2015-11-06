@@ -380,7 +380,7 @@ namespace odiard_pasini_peage
             {
                 if (car != null && car.Id != id)
                 {
-                    if (car.PosX > PosX && car.PosX < (Math.Max(PosX + speedX + 10, PosX + MIN_DISTANCE)) && car.PosY > (PosY - 40) && car.PosY < (PosY + 40))
+                    if (car.PosX > PosX && car.PosX < (Math.Max(PosX + speedX + 10, PosX + MIN_DISTANCE)) && car.PosY > (PosY - 30 + speedY/2) && car.PosY < (PosY + 30 + speedY/2))
                     {
                         double distance = DistanceTo(car);
                         if (distance < proximity)
@@ -563,6 +563,11 @@ namespace odiard_pasini_peage
                 {
                     speedY = (speedX * 0.5 * direction);
                 }
+
+                if (Math.Abs(targetY - PosY) < 3)
+                {
+                    speedY = 0;
+                }
             }
             else
             {
@@ -597,10 +602,16 @@ namespace odiard_pasini_peage
 
         public void updateAngle()
         {
-            if (speedX > 15 && Math.Abs(speedY) > 2 && (speedX + Math.Abs(speedY) > 50))
+            double oldAngle = angle;
+            if (speedX > 10)
             {
                 angle = (Math.Atan(speedY / speedX) * 180) / Math.PI;
             }
+
+            if (PosX > Road.ZONE_PEAGE_START && PosX < Road.ZONE_GUICHET_START + Road.ZONE_GUICHET_LENGTH && isBraking == 1 && speedX < 40)
+                {
+                    angle = angle / 1.25;
+                }
         }
 
         public void rollTimeAtCounter()
@@ -627,7 +638,6 @@ namespace odiard_pasini_peage
             {
                 startPaying();
             }
-
             updatePosition();
         }
 
