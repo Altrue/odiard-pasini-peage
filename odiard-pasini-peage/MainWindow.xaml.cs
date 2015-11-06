@@ -79,7 +79,7 @@ namespace odiard_pasini_peage
             theWorld.UpdateEnvironnement();
         }
 
-        void theWorld_WorldUpdatedEvent(CarAgent[] listCars)
+        void theWorld_WorldUpdatedEvent(CarAgent[] listCars, Peage[] listPeages)
         {
             worldCanvas.Children.Clear();
 
@@ -96,7 +96,7 @@ namespace odiard_pasini_peage
                     // Let's find the first position available in the list.
                     if (listCars[n] == null)
                     {
-                        listCars[n] = new CarAgent(n, listCars, theWorld);
+                        listCars[n] = new CarAgent(n, listCars, theWorld, listPeages);
                         n = carCount;
                     }
                     n++;
@@ -112,6 +112,15 @@ namespace odiard_pasini_peage
                     if (car != null) {
                         DrawCar(car, listCars);
                     }
+                }
+            }
+
+            // Counter Update
+            foreach (Peage peage in listPeages)
+            {
+                if (peage != null)
+                {
+                    DrawPeage(peage);
                 }
             }
 
@@ -216,16 +225,19 @@ namespace odiard_pasini_peage
                 {
                     TextBlock tbCarID = new TextBlock();
                     tbCarID.Text = paramCar.Id + " | Vit " + Math.Truncate(paramCar.SpeedX) + " | Prox " + Math.Truncate(paramCar.Proximity);
+                    //tbCarID.Text = "" + (Math.Abs(Math.Truncate(paramCar.SpeedY))+Math.Truncate(paramCar.SpeedX));
                     if (paramCar.isBraking == 1)
                     {
                         tbCarID.Foreground = new SolidColorBrush(Colors.LightSalmon);
+                        //tbCarID.Foreground = new SolidColorBrush(Colors.Black);
                     }
                     else
                     {
                         tbCarID.Foreground = new SolidColorBrush(Colors.LightBlue);
+                        //tbCarID.Foreground = new SolidColorBrush(Colors.Black);
                     }
-                    Canvas.SetTop(tbCarID, (paramCar.PosY + 8));
-                    Canvas.SetLeft(tbCarID, (paramCar.PosX - 50));
+                    //Canvas.SetTop(tbCarID, (paramCar.PosY - 8));
+                    //Canvas.SetLeft(tbCarID, (paramCar.PosX - 8));
                     Canvas.SetZIndex(tbCarID, 1);
                     worldCanvas.Children.Add(tbCarID);
                 }

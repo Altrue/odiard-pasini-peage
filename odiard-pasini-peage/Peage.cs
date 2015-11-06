@@ -6,17 +6,25 @@ using System.Threading.Tasks;
 
 namespace odiard_pasini_peage
 {
-    public class Peage :RangeCalcAble
+    public class Peage : RangeCalcAble
     {
         public static int defaultTimeToOpen = 20;
 
         private int timeToClose = 0; //temps minimum de fermeture de la barrière (temps de payement)
         private int timeToOpen = 0; //temps d'ouverture de la barrière
+        private int id;
 
-        public Peage(int x, int y)
+        public Peage(int x, int y, int ID)
         {
             PosX = x;
             PosY = y;
+            id = ID;
+        }
+
+        public int Id
+        {
+            get { return id; }
+            set { id = value; }
         }
 
         public int TimeToClose
