@@ -35,6 +35,8 @@ namespace odiard_pasini_peage
         public static int STEPS_PER_SECOND = 1000 / STEP;       // 50 steps/sec for 20ms steps, opti
         public static int MIN_TAT_DURATION = 30;                // Time At Counter in number of steps
         public static int MAX_TAT_DURATION = 90;                // Time At Counter in number of steps
+        public static int MIN_TAT_DURATION_T = 20;                // Time At Counter in number of steps
+        public static int MAX_TAT_DURATION_T = 30;                // Time At Counter in number of steps
 
         // Attributes - Leave public if requested very often to positively impact performances.
         private Road road;                                      //futur objet road
@@ -605,16 +607,29 @@ namespace odiard_pasini_peage
 
         public void rollTimeAtCounter()
         {
-            MainWindow.rnd.Next(MIN_TAT_DURATION, (MAX_TAT_DURATION + 1));
+            if(paymentType == 0)
+            {
+                timeAtCounter = MainWindow.rnd.Next(MIN_TAT_DURATION_T, (MAX_TAT_DURATION_T + 1));
+            }
+            else
+            {
+                timeAtCounter = MainWindow.rnd.Next(MIN_TAT_DURATION, (MAX_TAT_DURATION + 1));
+            }
         }
 
-        public void startPaying()
+        public void payement(Peage counter)
         {
             // We are at the counter, speed is 0, we haven't paid yet, and aren't already paying.
-            flagPaying = true;
-
-
-            //flagPaid = true;
+            if(counter.TimeToOpen != 0)
+            {
+                flagPaid = true;
+                flagPaying = false;
+            }
+            else if (counter.TimeToClose == 0)
+            {
+                counter.Payement(timeAtCounter);
+                flagPaying = true;
+            }
         }
 
         internal void Update(CarAgent[] listCars, Peage[] listPeages)
@@ -623,9 +638,9 @@ namespace odiard_pasini_peage
             updateSpeed(listCars, listPeages);
             updateAngle();
 
-            if (speedX < 0.1 && flagCloseToCounter == true && flagPaying == false && flagPaid == false)
+            if (speedX < 0.1 && flagCloseToCounter == true && flagPaid == false)
             {
-                startPaying();
+                payement(targetCounter);
             }
 
             updatePosition();

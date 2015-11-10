@@ -8,7 +8,7 @@ namespace odiard_pasini_peage
 {
     public class Peage : RangeCalcAble
     {
-        public static int defaultTimeToOpen = 20;
+        public static int defaultTimeToOpen = 5;
 
         private int timeToClose = 0; //temps minimum de fermeture de la barrière (temps de payement)
         private int timeToOpen = 0; //temps d'ouverture de la barrière
