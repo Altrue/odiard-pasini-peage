@@ -25,7 +25,7 @@ namespace odiard_pasini_peage
         public const int HALF_CAR_WIDTH = CAR_WIDTH / 2;        // opti
 
         //param
-        public static double MIN_DISTANCE = 70;                 // in pixels
+        public static double MIN_DISTANCE = 50;                 // in pixels
         public static int ACCELERATION = 40;                    // in number of steps required to reach 0 -> max speed
         public static int HALF_ACCELERATION = ACCELERATION / 2; // opti
         public static int BRAKES_EFFICIENCY = 3;                // car brakes are X times more efficient than car acceleration
@@ -279,12 +279,34 @@ namespace odiard_pasini_peage
             pickTargetCounter(listPeages);
             rollTimeAtCounter();
 
-            speedX = Road.MaxSpeedRoad;
+            proximity = (Road.MaxSpeedRoad * 2);
+
+            // Obstacle detection : For cars
+            proximity = detectProximityCars(proximity, listCars);
+
+            if (proximity == (Road.MaxSpeedRoad * 2))
+            {
+                speedX = Road.MaxSpeedRoad;
+            }
+            else if (proximity < MIN_DISTANCE)
+            {
+                speedX = 0;
+            }
+            else if (proximity < MIN_DISTANCE * 2)
+            {
+                speedX = Road.MaxSpeedRoad * 0.1;
+            }
+            else if (proximity == Road.MaxSpeedRoad)
+            {
+                speedX = Road.MaxSpeedRoad * 0.5;
+            }
+            else
+            {
+                speedX = Road.MaxSpeedRoad * 0.2;
+            }
+
             speedY = 0;
             updateSpeed(listCars, listPeages);
-
-            // Car Spawn
-            // MainWindow.cell[road, 0].Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/ressources/car_"+color+".png")));
         }
 
         public void pickTargetCounter(Peage[] listPeages)
@@ -366,11 +388,10 @@ namespace odiard_pasini_peage
             }
         }
 
-        public void updateSpeed(CarAgent[] listCars, Peage[] listPeages)
+        protected double detectProximityCars (double proximity, CarAgent[] listCars)
         {
-            // Obstacle detection :
-            proximity = Road.MAX_SPEED_ROAD_3;
-            if (PosX > (Road.ZONE_GUICHET_START - 100) && PosX < (Road.ZONE_GUICHET_START + Road.ZONE_GUICHET_LENGTH + 20)) {
+            if (PosX > (Road.ZONE_GUICHET_START - 100) && PosX < (Road.ZONE_GUICHET_START + Road.ZONE_GUICHET_LENGTH + 20))
+            {
                 flagVerticalProx = true;
             }
             else
@@ -382,27 +403,60 @@ namespace odiard_pasini_peage
             {
                 if (car != null && car.Id != id)
                 {
-                    if (car.PosX > PosX && car.PosX < (Math.Max(PosX + speedX + 10, PosX + MIN_DISTANCE)) && car.PosY > (PosY - 40) && car.PosY < (PosY + 40))
+                    //if (PosX < Road.ZONE_PEAGE_START)
+                    //{
+                        if (car.PosX > PosX && car.PosX < (Math.Max(PosX + speedX + 10, PosX + MIN_DISTANCE + 20)) && car.PosY > (PosY - 40) && car.PosY < (PosY + 40))
+                        {
+                            double distance = DistanceTo(car);
+                            if (distance < proximity)
+                            {
+                                proximity = distance;
+                                // closestCar = car;
+                            }
+                            if (Math.Abs(car.PosX - PosX) > CAR_WIDTH + 10)
+                            {
+                                flagHorizontalProx = true;
+                            }
+                            else if (Math.Abs(car.PosY - PosY) > CAR_HEIGHT + 10)
+                            {
+                                flagVerticalProx = true;
+                            }
+                        }
+                    /*}
+                    else
                     {
-                        double distance = DistanceTo(car);
-                        if (distance < proximity)
+                        if (car.PosX > PosX && car.PosX < (Math.Max(PosX + speedX + 10, PosX + MIN_DISTANCE + 20)) && car.PosY > (PosY - 30 + speedY / 2) && car.PosY < (PosY + 30 + speedY / 2))
                         {
-                            proximity = distance;
-                            // closestCar = car;
+                            double distance = DistanceTo(car);
+                            if (distance < proximity)
+                            {
+                                proximity = distance;
+                                // closestCar = car;
+                            }
+                            if (Math.Abs(car.PosX - PosX) > CAR_WIDTH + 10)
+                            {
+                                flagHorizontalProx = true;
+                            }
+                            else if (Math.Abs(car.PosY - PosY) > CAR_HEIGHT + 10)
+                            {
+                                flagVerticalProx = true;
+                            }
                         }
-                        if (Math.Abs(car.PosX - PosX) > CAR_WIDTH + 10)
-                        {
-                            flagHorizontalProx = true;
-                        }
-                        else if (Math.Abs(car.PosY - PosY) > CAR_HEIGHT + 10)
-                        {
-                            flagVerticalProx = true;
-                        }
-                    }
+                    }*/
                 }
             }
 
-            // Now for Counters, if the car didn't pay already.
+            return proximity;
+        }
+
+        public void updateSpeed(CarAgent[] listCars, Peage[] listPeages)
+        {
+            proximity = Road.MAX_SPEED_ROAD_3;
+
+            // Obstacle detection : For cars
+            proximity = detectProximityCars(proximity, listCars);
+
+            // Obstacle detection : For Counters, if the car didn't pay already.
             if (flagPaid == false && (Road.getRoadZone(PosX) == 3 || Road.getRoadZone(PosX) == 4))
             {
                 int peageID = -1;
@@ -444,14 +498,14 @@ namespace odiard_pasini_peage
             }
 
             // Approaching Counter
-            if (proximity < MIN_DISTANCE && flagCloseToCounter == true)
+            if (proximity < MIN_DISTANCE + 20 && flagCloseToCounter == true)
             {
                 speedX = 0;
             }
             else if (proximity < speedX + MIN_DISTANCE)
             {
                 // Using Brakes!
-                if (proximity < MIN_DISTANCE)
+                if (proximity < MIN_DISTANCE + 20)
                 {
                     speedX += (-Road.MAX_SPEED_ROAD_3 * BRAKES_EFFICIENCY) / ACCELERATION; // We take the speed of road 3 as its the fastest.
                     if (speedX < 0)
@@ -460,12 +514,16 @@ namespace odiard_pasini_peage
                     }
                 }
                 // Deceleration with obstacle :
-                else if (proximity < MIN_DISTANCE * 1.5)
+                else if (proximity < (MIN_DISTANCE + 20) * 1.5)
                 {
                     speedX += ((Road.MAX_SPEED_ROAD_3 / (proximity / MIN_DISTANCE)) - Road.MAX_SPEED_ROAD_3) / ACCELERATION; // A VERIFIER
-                    if (speedX < 0)
+                    if (speedX < (Road.MAX_SPEED_ROAD_3 * 0.2) && speedX > 0)
                     {
-                        speedX = 0;
+                        speedX = (Road.MAX_SPEED_ROAD_3 * 0.2);
+                    }
+                    else if (speedX < (Road.MAX_SPEED_ROAD_3 * 0.2) && speedX == 0)
+                    {
+                        speedX = (Road.MAX_SPEED_ROAD_3 * 0.1);
                     }
                 }
 
@@ -475,21 +533,21 @@ namespace odiard_pasini_peage
                     switch (road.Id)
                     {
                         case 3:
-                            speedX += (Road.MAX_SPEED_ROAD_1 - (Road.MAX_SPEED_ROAD_1 * (MIN_DISTANCE / proximity))) / ACCELERATION; // A VERIFIER
+                            speedX += (Road.MAX_SPEED_ROAD_1 - (Road.MAX_SPEED_ROAD_1 * ((MIN_DISTANCE + 20) / proximity))) / ACCELERATION; // A VERIFIER
                             if (speedX > Road.MAX_SPEED_ROAD_1)
                             {
                                 speedX = Road.MAX_SPEED_ROAD_1;
                             }
                             break;
                         case 2:
-                            speedX += (Road.MAX_SPEED_ROAD_2 - (Road.MAX_SPEED_ROAD_2 * (MIN_DISTANCE / proximity))) / ACCELERATION; // A VERIFIER
+                            speedX += (Road.MAX_SPEED_ROAD_2 - (Road.MAX_SPEED_ROAD_2 * ((MIN_DISTANCE + 20) / proximity))) / ACCELERATION; // A VERIFIER
                             if (speedX > Road.MAX_SPEED_ROAD_2)
                             {
                                 speedX = Road.MAX_SPEED_ROAD_2;
                             }
                             break;
                         case 1:
-                            speedX += (Road.MAX_SPEED_ROAD_3 - (Road.MAX_SPEED_ROAD_3 * (MIN_DISTANCE / proximity))) / ACCELERATION; // A VERIFIER
+                            speedX += (Road.MAX_SPEED_ROAD_3 - (Road.MAX_SPEED_ROAD_3 * ((MIN_DISTANCE + 20) / proximity))) / ACCELERATION; // A VERIFIER
                             if (speedX > Road.MAX_SPEED_ROAD_3)
                             {
                                 speedX = Road.MAX_SPEED_ROAD_3;
@@ -565,6 +623,11 @@ namespace odiard_pasini_peage
                 {
                     speedY = (speedX * 0.5 * direction);
                 }
+
+                if (Math.Abs(targetY - PosY) < 3)
+                {
+                    speedY = 0;
+                }
             }
             else
             {
@@ -599,10 +662,16 @@ namespace odiard_pasini_peage
 
         public void updateAngle()
         {
-            if (speedX > 15 && Math.Abs(speedY) > 2 && (speedX + Math.Abs(speedY) > 50))
+            double oldAngle = angle;
+            if (speedX > 10)
             {
                 angle = (Math.Atan(speedY / speedX) * 180) / Math.PI;
             }
+
+            if (PosX > Road.ZONE_PEAGE_START && PosX < Road.ZONE_GUICHET_START + Road.ZONE_GUICHET_LENGTH && isBraking == 1 && speedX < 40)
+                {
+                    angle = angle / 1.25;
+                }
         }
 
         public void rollTimeAtCounter()
@@ -642,7 +711,6 @@ namespace odiard_pasini_peage
             {
                 payement(targetCounter);
             }
-
             updatePosition();
         }
 

@@ -224,8 +224,8 @@ namespace odiard_pasini_peage
                 if (DEBUGMODE)
                 {
                     TextBlock tbCarID = new TextBlock();
-                    tbCarID.Text = paramCar.Id + " | Vit " + Math.Truncate(paramCar.SpeedX) + " | Prox " + Math.Truncate(paramCar.Proximity);
-                    //tbCarID.Text = "" + (Math.Abs(Math.Truncate(paramCar.SpeedY))+Math.Truncate(paramCar.SpeedX));
+                    //tbCarID.Text = paramCar.Id + " | Vit " + Math.Truncate(paramCar.SpeedX) + " | Prox " + Math.Truncate(paramCar.Proximity);
+                    tbCarID.Text = "" + Math.Truncate(paramCar.SpeedX);
                     if (paramCar.isBraking == 1)
                     {
                         tbCarID.Foreground = new SolidColorBrush(Colors.LightSalmon);
@@ -236,8 +236,8 @@ namespace odiard_pasini_peage
                         tbCarID.Foreground = new SolidColorBrush(Colors.LightBlue);
                         //tbCarID.Foreground = new SolidColorBrush(Colors.Black);
                     }
-                    //Canvas.SetTop(tbCarID, (paramCar.PosY - 8));
-                    //Canvas.SetLeft(tbCarID, (paramCar.PosX - 8));
+                    Canvas.SetTop(tbCarID, (paramCar.PosY + 8));
+                    Canvas.SetLeft(tbCarID, (paramCar.PosX - 8));
                     Canvas.SetZIndex(tbCarID, 1);
                     worldCanvas.Children.Add(tbCarID);
                 }
