@@ -125,66 +125,43 @@ namespace odiard_pasini_peage
                 Canvas.SetLeft(tbCarCount, (5));
                 worldCanvas.Children.Add(tbCarCount);
 
-            // Min Distance
-                TextBlock tbMin = new TextBlock();
-                tbMin.Text = "Distance Minimale : " + CarAgent.MIN_DISTANCE;
-                tbMin.Foreground = new SolidColorBrush(Colors.White);
-                Canvas.SetTop(tbMin, (1));
-                Canvas.SetLeft(tbMin, (175));
-                worldCanvas.Children.Add(tbMin);
-
-            // Acceleration
-                TextBlock tbAcceleration = new TextBlock();
-                tbAcceleration.Text = "Accélération : " + CarAgent.ACCELERATION;
-                tbAcceleration.Foreground = new SolidColorBrush(Colors.White);
-                Canvas.SetTop(tbAcceleration, (13));
-                Canvas.SetLeft(tbAcceleration, (175));
-                worldCanvas.Children.Add(tbAcceleration);
-            // Brakes Efficiency
-                TextBlock tbBrakesEfficiency = new TextBlock();
-                tbBrakesEfficiency.Text = "Efficacité des freins : " + CarAgent.BRAKES_EFFICIENCY;
-                tbBrakesEfficiency.Foreground = new SolidColorBrush(Colors.White);
-                Canvas.SetTop(tbBrakesEfficiency, (26));
-                Canvas.SetLeft(tbBrakesEfficiency, (175));
-                worldCanvas.Children.Add(tbBrakesEfficiency);
-
             // Spawn Rate
                 TextBlock tbSpawnRate = new TextBlock();
-                tbSpawnRate.Text = "Taux d'apparition : " + CarAgent.SPAWN_RATE;
+                tbSpawnRate.Text = "Taux d'apparition : " + CarAgent.SPAWN_RATE_INVERSE;
                 tbSpawnRate.Foreground = new SolidColorBrush(Colors.White);
-                Canvas.SetTop(tbSpawnRate, (38));
+                Canvas.SetTop(tbSpawnRate, (5));
                 Canvas.SetLeft(tbSpawnRate, (175));
                 worldCanvas.Children.Add(tbSpawnRate);
 
             // Minimum Time At Counter
                 TextBlock tbMinTAT = new TextBlock();
-                tbMinTAT.Text = "Temps minimum au guichet : " + CarAgent.MIN_TAT_DURATION;
+                tbMinTAT.Text = "Durée minimum au guichet : " + CarAgent.MIN_TAT_DURATION;
                 tbMinTAT.Foreground = new SolidColorBrush(Colors.White);
-                Canvas.SetTop(tbMinTAT, (50));
+                Canvas.SetTop(tbMinTAT, (17));
                 Canvas.SetLeft(tbMinTAT, (175));
                 worldCanvas.Children.Add(tbMinTAT);
 
             // Maximum Time At Counter
                 TextBlock tbMaxTAT = new TextBlock();
-                tbMaxTAT.Text = "Temps maximum au guichet : " + CarAgent.MAX_TAT_DURATION;
+                tbMaxTAT.Text = "Durée maximum au guichet : " + CarAgent.MAX_TAT_DURATION;
                 tbMaxTAT.Foreground = new SolidColorBrush(Colors.White);
-                Canvas.SetTop(tbMaxTAT, (62));
+                Canvas.SetTop(tbMaxTAT, (29));
                 Canvas.SetLeft(tbMaxTAT, (175));
                 worldCanvas.Children.Add(tbMaxTAT);
 
             // Minimum Time At Counter
                 TextBlock tbMinTATT = new TextBlock();
-                tbMinTATT.Text = "Temps minimum au guichet télépéage : " + CarAgent.MIN_TAT_DURATION_T;
+                tbMinTATT.Text = "Durée minimum au guichet télépéage : " + CarAgent.MIN_TAT_DURATION_T;
                 tbMinTATT.Foreground = new SolidColorBrush(Colors.White);
-                Canvas.SetTop(tbMinTATT, (74));
+                Canvas.SetTop(tbMinTATT, (41));
                 Canvas.SetLeft(tbMinTATT, (175));
                 worldCanvas.Children.Add(tbMinTATT);
 
             // Maximum Time At Counter
                 TextBlock tbMaxTATT = new TextBlock();
-                tbMaxTATT.Text = "Temps maximum au guichet télépéage : " + CarAgent.MAX_TAT_DURATION_T;
+                tbMaxTATT.Text = "Durée maximum au guichet télépéage : " + CarAgent.MAX_TAT_DURATION_T;
                 tbMaxTATT.Foreground = new SolidColorBrush(Colors.White);
-                Canvas.SetTop(tbMaxTATT, (86));
+                Canvas.SetTop(tbMaxTATT, (53));
                 Canvas.SetLeft(tbMaxTATT, (175));
                 worldCanvas.Children.Add(tbMaxTATT);
 
@@ -251,12 +228,18 @@ namespace odiard_pasini_peage
 
         private void minP_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            CarAgent.MAX_TAT_DURATION = (int)e.NewValue;
+            CarAgent.MIN_TAT_DURATION = (int)e.NewValue;
         }
 
         private void maxP_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             CarAgent.MAX_TAT_DURATION = (int)e.NewValue;
+        }
+
+        private void sliderSpawn_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            CarAgent.SPAWN_RATE = (int)e.NewValue;
+            CarAgent.SPAWN_RATE_INVERSE = 70 - CarAgent.SPAWN_RATE;
         }
     }
 }

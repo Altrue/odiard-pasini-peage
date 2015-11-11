@@ -29,14 +29,15 @@ namespace odiard_pasini_peage
         public static int ACCELERATION = 40;                    // in number of steps required to reach 0 -> max speed
         public static int HALF_ACCELERATION = ACCELERATION / 2; // opti
         public static int BRAKES_EFFICIENCY = 4;                // car brakes are X times more efficient than car acceleration
-        public static int SPAWN_RATE = 15;                      // X = 1/X% chance per step
+        public static int SPAWN_RATE = 30;                      // X = 1/X% chance per step
+        public static int SPAWN_RATE_INVERSE = 70 - SPAWN_RATE; // for more bieutifull value
         public static int T_RATE = 30;                          // X = X% of cars being orange (Télépéage)
         public static int STEP = 20;                            // in milliseconds
         public static int STEPS_PER_SECOND = 1000 / STEP;       // 50 steps/sec for 20ms steps, opti
-        public static int MIN_TAT_DURATION = 75;                // Time At Counter in number of steps
-        public static int MAX_TAT_DURATION = 125;                // Time At Counter in number of steps
-        public static int MIN_TAT_DURATION_T = 15;                // Time At Counter in number of steps
-        public static int MAX_TAT_DURATION_T = 40;                // Time At Counter in number of steps
+        public static int MIN_TAT_DURATION = 100;                // Time At Counter in number of steps
+        public static int MAX_TAT_DURATION = 200;                // Time At Counter in number of steps
+        public static int MIN_TAT_DURATION_T = 20;                // Time At Counter in number of steps
+        public static int MAX_TAT_DURATION_T = 50;                // Time At Counter in number of steps
 
         // Attributes - Leave public if requested very often to positively impact performances.
         private Road road;                                      //futur objet road

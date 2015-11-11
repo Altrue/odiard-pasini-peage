@@ -5,17 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:odiard_pasini_peage"
         mc:Ignorable="d"
-        Title="MainWindow">
+        Title="MainWindow" d:DesignWidth="883">
     <Canvas Margin="0,58,0,0">
-        <Canvas Height="58" Canvas.Top="-58" Width="760">
-            <Slider x:Name="minT" Canvas.Left="184" Minimum="5" Maximum="30" Width="100" Canvas.Top="5" SmallChange="1" Value="15" ValueChanged="minT_ValueChanged"/>
+        <Canvas Height="58" Canvas.Top="-58" Width="865" Canvas.Left="10">
+            <Slider x:Name="minT" Canvas.Left="184" Minimum="10" Maximum="40" Width="100" Canvas.Top="5" SmallChange="1" Value="20" ValueChanged="minT_ValueChanged"/>
             <Label x:Name="label" Content="Temps minimum au télépéage :" Height="27" Width="176"/>
             <Label x:Name="label1" Content="Temps maximum au télépéage :" Height="30" Canvas.Top="27" Width="184"/>
-            <Slider x:Name="maxT" Canvas.Left="184" Canvas.Top="33" Width="100" SmallChange="1" Maximum="60" Minimum="30" ValueChanged="maxT_ValueChanged" Value="40"/>
+            <Slider x:Name="maxT" Canvas.Left="184" Canvas.Top="33" Width="100" SmallChange="1" Maximum="70" Minimum="40" ValueChanged="maxT_ValueChanged" Value="50"/>
             <Label x:Name="label2" Content="Temps minimum au péage :" Height="28" Canvas.Left="284" Width="176"/>
             <Label x:Name="label3" Content="Temps maximum au péage :" Height="29" Canvas.Left="284" Canvas.Top="28" Width="176"/>
-            <Slider x:Name="minP" Height="18" Canvas.Left="453" Canvas.Top="4" Width="100" Maximum="100" Minimum="50" SmallChange="1" Value="75" ValueChanged="minP_ValueChanged"/>
-            <Slider x:Name="maxP" Height="25" Canvas.Left="453" Canvas.Top="32" Width="100" SmallChange="1" Maximum="150" Minimum="100" Value="125" ValueChanged="maxP_ValueChanged"/>
+            <Slider x:Name="minP" Height="18" Canvas.Left="453" Canvas.Top="4" Width="100" Maximum="150" Minimum="50" SmallChange="1" Value="100" ValueChanged="minP_ValueChanged"/>
+            <Slider x:Name="maxP" Height="25" Canvas.Left="453" Canvas.Top="32" Width="100" SmallChange="1" Maximum="250" Minimum="150" Value="200" ValueChanged="maxP_ValueChanged"/>
+            <Label x:Name="label4" Content="Taux d'apparition :" Height="25" Canvas.Left="624" Width="108" Canvas.Top="14"/>
+            <Slider x:Name="sliderSpawn" Height="20" Canvas.Left="755" Canvas.Top="19" Width="100" Maximum="60" SmallChange="1" Value="30" ValueChanged="sliderSpawn_ValueChanged" IsDirectionReversed="True"/>
 
         </Canvas>
         <Canvas Name="worldCanvas" Margin="0,76,0,0"></Canvas>
