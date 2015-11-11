@@ -33,10 +33,10 @@ namespace odiard_pasini_peage
         public static int T_RATE = 30;                          // X = X% of cars being orange (Télépéage)
         public static int STEP = 20;                            // in milliseconds
         public static int STEPS_PER_SECOND = 1000 / STEP;       // 50 steps/sec for 20ms steps, opti
-        public static int MIN_TAT_DURATION = 30;                // Time At Counter in number of steps
-        public static int MAX_TAT_DURATION = 90;                // Time At Counter in number of steps
-        public static int MIN_TAT_DURATION_T = 20;                // Time At Counter in number of steps
-        public static int MAX_TAT_DURATION_T = 30;                // Time At Counter in number of steps
+        public static int MIN_TAT_DURATION = 75;                // Time At Counter in number of steps
+        public static int MAX_TAT_DURATION = 125;                // Time At Counter in number of steps
+        public static int MIN_TAT_DURATION_T = 15;                // Time At Counter in number of steps
+        public static int MAX_TAT_DURATION_T = 40;                // Time At Counter in number of steps
 
         // Attributes - Leave public if requested very often to positively impact performances.
         private Road road;                                      //futur objet road

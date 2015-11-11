@@ -6,7 +6,18 @@
         xmlns:local="clr-namespace:odiard_pasini_peage"
         mc:Ignorable="d"
         Title="MainWindow">
-    <Canvas Name="worldCanvas">
-        
+    <Canvas Margin="0,58,0,0">
+        <Canvas Height="58" Canvas.Top="-58" Width="760">
+            <Slider x:Name="minT" Canvas.Left="184" Minimum="5" Maximum="30" Width="100" Canvas.Top="5" SmallChange="1" Value="15" ValueChanged="minT_ValueChanged"/>
+            <Label x:Name="label" Content="Temps minimum au télépéage :" Height="27" Width="176"/>
+            <Label x:Name="label1" Content="Temps maximum au télépéage :" Height="30" Canvas.Top="27" Width="184"/>
+            <Slider x:Name="maxT" Canvas.Left="184" Canvas.Top="33" Width="100" SmallChange="1" Maximum="60" Minimum="30" ValueChanged="maxT_ValueChanged" Value="40"/>
+            <Label x:Name="label2" Content="Temps minimum au péage :" Height="28" Canvas.Left="284" Width="176"/>
+            <Label x:Name="label3" Content="Temps maximum au péage :" Height="29" Canvas.Left="284" Canvas.Top="28" Width="176"/>
+            <Slider x:Name="minP" Height="18" Canvas.Left="453" Canvas.Top="4" Width="100" Maximum="100" Minimum="50" SmallChange="1" Value="75" ValueChanged="minP_ValueChanged"/>
+            <Slider x:Name="maxP" Height="25" Canvas.Left="453" Canvas.Top="32" Width="100" SmallChange="1" Maximum="150" Minimum="100" Value="125" ValueChanged="maxP_ValueChanged"/>
+
+        </Canvas>
+        <Canvas Name="worldCanvas" Margin="0,76,0,0"></Canvas>
     </Canvas>
 </Window>
