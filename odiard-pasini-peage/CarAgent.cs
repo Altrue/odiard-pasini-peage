@@ -25,11 +25,11 @@ namespace odiard_pasini_peage
         public const int HALF_CAR_WIDTH = CAR_WIDTH / 2;        // opti
 
         //param
-        public static double MIN_DISTANCE = 50;                 // in pixels
+        public static double MIN_DISTANCE = 45;                 // in pixels
         public static int ACCELERATION = 40;                    // in number of steps required to reach 0 -> max speed
         public static int HALF_ACCELERATION = ACCELERATION / 2; // opti
-        public static int BRAKES_EFFICIENCY = 3;                // car brakes are X times more efficient than car acceleration
-        public static int SPAWN_RATE = 1;                      // X = 1/X% chance per step
+        public static int BRAKES_EFFICIENCY = 4;                // car brakes are X times more efficient than car acceleration
+        public static int SPAWN_RATE = 15;                      // X = 1/X% chance per step
         public static int T_RATE = 30;                          // X = X% of cars being orange (Télépéage)
         public static int STEP = 20;                            // in milliseconds
         public static int STEPS_PER_SECOND = 1000 / STEP;       // 50 steps/sec for 20ms steps, opti
@@ -59,6 +59,7 @@ namespace odiard_pasini_peage
         private bool flagPaid;
         private bool flagPaying;
         private bool flagCloseToCounter;
+        public bool flagCounterUpdated;
         public double angle;
         private double proximity;
 
@@ -145,6 +146,11 @@ namespace odiard_pasini_peage
             get { return flagCloseToCounter; }
             set { flagCloseToCounter = value; }
         }
+        public bool FlagCounterUpdated
+        {
+            get { return flagCounterUpdated; }
+            set { flagCounterUpdated = value; }
+        }
         public double Proximity
         {
             get { return proximity; }
@@ -161,6 +167,7 @@ namespace odiard_pasini_peage
             flagPaid = false;
             flagPaying = false;
             flagCloseToCounter = false;
+            flagCounterUpdated = false;
             theWorld = world;
             isBraking = 0;
             wasBraking = 0;
@@ -331,6 +338,101 @@ namespace odiard_pasini_peage
             
         }
 
+        public void updateTargetCounter(CarAgent[] listCars, Peage[] listPeages)
+        {
+            int target = 0;
+            int counter0 = 0;
+            int counter1 = 0;
+            int counter2 = 0;
+            int counter3 = 0;
+            int counter4 = 0;
+            int counter5 = 0;
+
+            // We count the number of cars waiting for each counter.
+            foreach (CarAgent car in listCars)
+            {
+                if (car != null && car.Id != id)
+                {
+                    if (car.PosX > (Road.ZONE_PEAGE_START + 100) && car.PosX < (Road.ZONE_GUICHET_START))
+                    {
+                        if (car.targetCounter.Id == 5)
+                        {
+                            counter5++;
+                        }
+                        else if (car.targetCounter.Id == 4)
+                        {
+                            counter4++;
+                        }
+                        else if (car.targetCounter.Id == 3)
+                        {
+                            counter3++;
+                        }
+                        else if (car.targetCounter.Id == 2)
+                        {
+                            counter2++;
+                        }
+                        else if (car.targetCounter.Id == 1)
+                        {
+                            counter1++;
+                        }
+                        else if (car.targetCounter.Id == 0)
+                        {
+                            counter0++;
+                        }
+                        else
+                        {
+                            // ???
+                        }
+                    }
+                }
+            }
+
+            // We re-evaluate our options
+            switch (road.Id)
+            {
+                case (1):
+                    if (counter0 >= counter1)
+                    {
+                        target = 1;
+                    }
+                    else
+                    {
+                        target = 0;
+                    }
+                    break;
+                case (2):
+                    if (counter2 > counter3 || counter4 > counter3)
+                    {
+                        target = 3;
+                    }
+                    else if (counter2 > (counter4 + 1))
+                    {
+                        target = 4;
+                    }
+                    else
+                    {
+                        target = 2;
+                    }
+                    break;
+                case (3):
+                    if (counter3 > counter4 || counter5 > counter4)
+                    {
+                        target = 4;
+                    }
+                    else if ((counter3 + 1) > counter5)
+                    {
+                        target = 5;
+                    }
+                    else
+                    {
+                        target = 3;
+                    }
+                    break;
+            }
+
+            targetCounter = listPeages[target];
+        }
+
         public void updateTargetY()
         {
             int currentZone = road.getRoadZone(PosX);
@@ -405,7 +507,7 @@ namespace odiard_pasini_peage
                 {
                     //if (PosX < Road.ZONE_PEAGE_START)
                     //{
-                        if (car.PosX > PosX && car.PosX < (Math.Max(PosX + speedX + 10, PosX + MIN_DISTANCE + 20)) && car.PosY > (PosY - 40) && car.PosY < (PosY + 40))
+                        if (car.PosX > PosX && car.PosX < (Math.Max(PosX + speedX + 10, PosX + MIN_DISTANCE + 20)) && car.PosY > (PosY - 35) && car.PosY < (PosY + 35))
                         {
                             double distance = DistanceTo(car);
                             if (distance < proximity)
@@ -489,7 +591,10 @@ namespace odiard_pasini_peage
                 if (distance < proximity)
                 {
                     proximity = distance;
-                    flagCloseToCounter = true;
+                    if (PosX > Road.ZONE_GUICHET_START)
+                    {
+                        flagCloseToCounter = true;
+                    }
                 }
                 if (Math.Abs(counter.PosX - PosX) > CAR_WIDTH + 10)
                 {
@@ -712,6 +817,12 @@ namespace odiard_pasini_peage
                 payement(targetCounter);
             }
             updatePosition();
+
+            if (PosX > (Road.ZONE_PEAGE_START - 10) && flagCounterUpdated == false)
+            {
+                flagCounterUpdated = true;
+                updateTargetCounter(listCars, listPeages);
+            }
         }
 
     }
