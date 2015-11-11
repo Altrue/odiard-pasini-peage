@@ -20,7 +20,7 @@ namespace odiard_pasini_peage
     {
         // ===============================
         // DEBUG MODE CONTROL
-        public const bool DEBUGMODE = true;
+        public const bool DEBUGMODE = false;
         // ===============================
 
         // TODO :
