@@ -216,7 +216,7 @@ namespace odiard_pasini_peage
                 {
                     TextBlock tbCarID = new TextBlock();
                     //tbCarID.Text = paramCar.Id + " | Vit " + Math.Truncate(paramCar.SpeedX) + " | Prox " + Math.Truncate(paramCar.Proximity);
-                    tbCarID.Text = "" + Math.Truncate(paramCar.SpeedX);
+                    tbCarID.Text = "" + paramCar.TargetCounter.Id;
                     if (paramCar.isBraking == 1)
                     {
                         tbCarID.Foreground = new SolidColorBrush(Colors.LightSalmon);
