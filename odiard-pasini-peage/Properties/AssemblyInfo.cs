@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
 [assembly: AssemblyProduct("odiard-pasini-peage")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2015")]
+[assembly: AssemblyCopyright("odiard - pasini")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
